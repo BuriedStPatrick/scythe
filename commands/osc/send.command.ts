@@ -3,37 +3,24 @@ import { send, type OscCommandType, type OscConnection } from '../../osc/osc'
 
 export type OscSendCommandArgs = {
   address: string
-  type: OscCommandType
-  argument: string
+  value: string
 } & OscConnection & Arguments
 
 export const oscSendCommand: CommandModule = {
-  command: 'send [address]',
+  command: 'send <address> [value]',
   describe: 'Send an OSC command',
   aliases: ['s'],
   builder: (args: Argv<{}>) => args
+    .example('$0 osc send f/tempo/raw 150', 'Set the tempo to 150 BPM')
+    .example('$0 osc send t/play', 'Play/Pause')
     .positional('address', {
       type: 'string',
-      describe: 'The address of the command',
+      describe: `The address of the command. Must be of format '<type>/<address>', such as 't/play', 'f/tempo/raw', etc.`,
       require: true
     })
-    .option('type', {
+    .positional('value', {
       type: 'string',
-      describe: 'The type tag to use. s = string, n = number (floating between 0-1), f = number (floating), i = number (integer), b = binary (boolean, 0 or 1), t = trigger',
-      require: false,
-      default: 't',
-      choices: [
-        't',
-        's',
-        'n',
-        'f',
-        'i',
-        'b'
-      ],
-    })
-    .option('argument', {
-      type: 'string',
-      describe: 'Argument to pass with command.',
+      describe: 'Value to pass with command.',
       required: false
     })
     .option('port', {
@@ -47,18 +34,25 @@ export const oscSendCommand: CommandModule = {
       default: '127.0.0.1'
     }),
   handler: async (argv: OscSendCommandArgs) => {
-    try {
-      send({
-        address: argv.address,
-        host: argv.host,
-        port: argv.port,
-        type: argv.type,
-        argument: argv.argument
-      })
-    } catch(err) {
-      console.error(err)
+    const addressSplit = argv.address.split('/')
 
-      process.exit(1)
+    if (!addressSplit.length) {
+      throw new Error(`Address format invalid`)
     }
+
+    const address = `/${addressSplit.slice(1).join('/')}`
+    const type = addressSplit[0] as OscCommandType
+
+    if (!type || !['t', 's', 'n', 'f', 'i', 'b'].includes(type)) {
+      throw new Error(`Address must be prefixed with format. See examples.`)
+    }
+
+    send({
+      address: address,
+      host: argv.host,
+      port: argv.port,
+      type: type,
+      argument: argv.value
+    })
   }
 }

@@ -16,7 +16,7 @@ scythe mute master
 
 # Make a low-level OSC call when the built-in commands aren't enough.
 # Here, sets the tempo to 150 BPM.
-scythe osc send /tempo/raw --type f --argument 150.00
+scythe osc send f/tempo/raw 150
 ```
 
 ## Usage
