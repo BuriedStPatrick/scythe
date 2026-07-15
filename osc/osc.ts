@@ -57,7 +57,7 @@ export function parseOscTypeTag(type: string, argument: string): string | undefi
   }
 }
 
-export function pad4(buffer: Buffer) {
+export function pad4(buffer: Buffer): Buffer {
   const padding = (4 - (buffer.length % 4) % 4)
 
   return Buffer.concat([buffer, Buffer.alloc(padding)])

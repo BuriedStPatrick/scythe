@@ -8,7 +8,7 @@ export type OscSendCommandArgs = {
 
 export const oscSendCommand: CommandModule = {
   command: 'send <address> [value]',
-  describe: 'Send an OSC command',
+  describe: `Send an OSC command. You can find all available default commands under %APPDATA%/REAPER/OSC/Default.ReaperOSC`,
   aliases: ['s'],
   builder: (args: Argv<{}>) => args
     .example('$0 osc send f/tempo/raw 150', 'Set the tempo to 150 BPM')
