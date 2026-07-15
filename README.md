@@ -8,11 +8,11 @@ Some examples:
 # Toggle transport play/pause
 scythe play
 
-# Toggle track 2 mute
+# Mute track 2
 scythe mute track 2
 
 # Toggle MASTER track mute (same as muting track 0)
-scythe mute master
+scythe mute toggle master
 
 # Make a low-level OSC call when the built-in commands aren't enough.
 # Here, sets the tempo to 150 BPM.

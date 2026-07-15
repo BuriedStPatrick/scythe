@@ -1,19 +1,19 @@
 import type { Arguments, CommandModule } from "yargs";
-import { send, type OscConnection } from "../../osc/osc";
+import { send, type OscConnection } from "../../../osc/osc";
 
-export type MuteTrackCommandArguments = {
+export type MuteToggleTrackCommandArguments = {
   track: number
 }
   & OscConnection
   & Arguments
 
-export const muteTrackCommand: CommandModule = {
+export const muteToggleTrackCommand: CommandModule = {
   command: 'track <track>',
-  describe: 'Mute track.',
+  describe: 'Toggle track mute.',
   builder: args => args
     .positional('track', {
       type: 'number',
-      describe: 'The track number to mute.',
+      describe: 'The track number to mute toggle.',
       required: true
     })
     .option('port', {
@@ -27,13 +27,12 @@ export const muteTrackCommand: CommandModule = {
       default: '127.0.0.1'
     })
     ,
-  handler: (argv: MuteTrackCommandArguments) => {
+  handler: (argv: MuteToggleTrackCommandArguments) => {
     send({
-      address: `/track/${argv.track}/mute`,
+      address: `/track/${argv.track}/mute/toggle`,
       host: argv.host,
       port: argv.port,
-      type: 'b',
-      argument: '1'
+      type: 'b'
     })
   }
 }

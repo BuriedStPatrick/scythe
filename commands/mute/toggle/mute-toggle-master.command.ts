@@ -1,12 +1,12 @@
 import type { Arguments, CommandModule } from "yargs";
-import { send, type OscConnection } from "../../osc/osc";
+import { send, type OscConnection } from "../../../osc/osc";
 
-export type MuteMasterCommandArguments = { }
+export type MuteToggleMasterCommandArguments = { }
   & OscConnection
   & Arguments
 
-export const muteMasterCommand: CommandModule = {
-  command: 'master',
+export const muteToggleMasterCommand: CommandModule = {
+  command: 'master [state]',
   describe: 'Mute MASTER track.',
   builder: args => args
     .option('port', {
@@ -19,9 +19,9 @@ export const muteMasterCommand: CommandModule = {
       describe: 'The OSC server host',
       default: '127.0.0.1'
     }),
-  handler: (argv: MuteMasterCommandArguments) => {
+  handler: (argv: MuteToggleMasterCommandArguments) => {
     send({
-      address: `/track/0/mute`,
+      address: `/track/0/mute/toggle`,
       host: argv.host,
       port: argv.port,
       type: 'b',

@@ -1,21 +1,16 @@
 import type { Arguments, CommandModule } from "yargs";
 import { send, type OscConnection } from "../../osc/osc";
+import type { UnmuteCommandArguments } from "./unmute.command";
 
-export type MuteTrackCommandArguments = {
-  track: number
-}
+export type UnmuteMasterCommandArguments = { }
+  & UnmuteCommandArguments
   & OscConnection
   & Arguments
 
-export const muteTrackCommand: CommandModule = {
-  command: 'track <track>',
-  describe: 'Mute track.',
+export const unmuteMasterCommand: CommandModule = {
+  command: 'master',
+  describe: 'Unmute MASTER.',
   builder: args => args
-    .positional('track', {
-      type: 'number',
-      describe: 'The track number to mute.',
-      required: true
-    })
     .option('port', {
       type: 'number',
       describe: 'The OSC server port',
@@ -25,15 +20,14 @@ export const muteTrackCommand: CommandModule = {
       type: 'string',
       describe: 'The OSC server host',
       default: '127.0.0.1'
-    })
-    ,
-  handler: (argv: MuteTrackCommandArguments) => {
+    }),
+  handler: (argv: UnmuteMasterCommandArguments) => {
     send({
-      address: `/track/${argv.track}/mute`,
+      address: `/track/0/mute`,
       host: argv.host,
       port: argv.port,
       type: 'b',
-      argument: '1'
+      argument: '0'
     })
   }
 }

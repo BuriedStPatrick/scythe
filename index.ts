@@ -7,6 +7,7 @@ import { playCommand } from './commands/transport/play.command.ts';
 import { stopCommand } from './commands/transport/stop.command.ts';
 import { pauseCommand } from './commands/transport/pause.command.ts';
 import { transportCommand } from './commands/transport/transport.command.ts';
+import { unmuteCommand } from './commands/unmute/unmute.command.ts';
 
 yargs(process.argv.splice(2))
   .version(getVersion())
@@ -15,6 +16,7 @@ yargs(process.argv.splice(2))
   .command(pauseCommand)
   .command(stopCommand)
   .command(muteCommand)
+  .command(unmuteCommand)
   .command(transportCommand)
   .command(oscCommand)
   .completion()
