@@ -8,7 +8,7 @@ export type OscTarget = {
   host: string
 }
 
-export type TypeTag = 't' | 's' | 'n' | 'i' | 'b'
+export type TypeTag = 't' | 's' | 'n' | 'f' | 'i' | 'b'
 
 export type OscSendCommandArgs = {
   address: string
@@ -28,13 +28,14 @@ export const oscSendCommand: CommandModule = {
     })
     .option('type', {
       type: 'string',
-      describe: 'The type tag to use. s = string, n = number (floating), i = number (integer), b = boolean, t = trigger',
+      describe: 'The type tag to use. s = string, n = number (floating between 0-1), f = number (floating), i = number (integer), b = binary (boolean, 0 or 1), t = trigger',
       require: false,
       default: 't',
       choices: [
         't',
         's',
         'n',
+        'f',
         'i',
         'b'
       ],
@@ -58,7 +59,7 @@ export const oscSendCommand: CommandModule = {
     const socket = dgram.createSocket('udp4')
 
     const address = oscString(argv.address)
-    const typeTag = oscString(`,${argv.type}`)
+    const typeTag = oscString(`,${argv.type === 'b' ? 'i' : argv.type}`)
     let argument = undefined
 
     switch (argv.type) {
@@ -68,13 +69,20 @@ export const oscSendCommand: CommandModule = {
       case 'n':
         argument = oscFloat(Number.parseFloat(argv.argument))
         break
+      case 'f':
+        argument = oscFloat(Number.parseFloat(argv.argument))
+        break
       case 'i':
-        argument = oscInt32(Number.parseInt(argv.argument))
+          argument = oscInt32(Number.parseInt(argv.argument))
+          break
+      case 'b': {
+        const value = (argv.argument === 'true' || argv.argument === '1')
+          ? 1
+          : 0
+
+        argument = oscInt32(value)
         break
-        case 'b':
-          // TODO: boolean parsing
-        argument = oscInt32(Number.parseInt(argv.argument))
-        break
+      }
       default:
         argument = undefined
     }

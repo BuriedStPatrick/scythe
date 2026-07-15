@@ -1,6 +1,7 @@
 {
-  "name": "osc-client",
+  "name": "scythe",
   "module": "index.ts",
+  "description": "REAPER CLI client over OSC",
   "version": "0.0.1",
   "devDependencies": {
     "@types/bun": "^1.3.14",
