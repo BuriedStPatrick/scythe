@@ -1,16 +1,15 @@
 import type { Arguments, ArgumentsCamelCase, Argv, CommandModule } from "yargs";
 import { muteTrackCommand } from "./mute-track.command";
 import type { OscConnection } from "../../osc/osc";
-
-export type TrackCommandArguments = {
-  trackno: number
-}
+import { muteMasterCommand } from "./mute-master.command";
 
 export type MuteToggleState = 'on' | 'off'
 
 export type MuteCommandArguments = {
   state?: MuteToggleState
-} & TrackCommandArguments & OscConnection & Arguments
+}
+  & OscConnection
+  & Arguments
 
 export const muteCommand: CommandModule = {
   command: 'mute',
@@ -24,4 +23,5 @@ export const muteCommand: CommandModule = {
       choices: ['on', 'off'] as const
     })
     .command(muteTrackCommand)
+    .command(muteMasterCommand)
 }

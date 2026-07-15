@@ -1,20 +1,15 @@
 import type { Arguments, CommandModule } from "yargs";
-import type { MuteCommandArguments } from "./mute.command";
+import type { MuteCommandArguments, TrackCommandArguments } from "./mute.command";
 import { send, type OscConnection } from "../../osc/osc";
 
-export type TrackCommandArguments = {
-  trackno: number
-}
-
-export type MuteTrackCommandArguments = { }
-  & TrackCommandArguments
+export type MuteMasterCommandArguments = { }
   & MuteCommandArguments
   & OscConnection
   & Arguments
 
-export const muteTrackCommand: CommandModule = {
-  command: 'track <trackno> [state]',
-  describe: 'Mute track.',
+export const muteMasterCommand: CommandModule = {
+  command: 'master [state]',
+  describe: 'Mute MASTER track.',
   builder: args => args
     .option('port', {
       type: 'number',
@@ -26,11 +21,11 @@ export const muteTrackCommand: CommandModule = {
       describe: 'The OSC server host',
       default: '127.0.0.1'
     }),
-  handler: (argv: MuteTrackCommandArguments) => {
+  handler: (argv: MuteMasterCommandArguments) => {
     try {
       const address = argv.state !== undefined
-        ? `/track/${argv.trackno}/mute`
-        : `/track/${argv.trackno}/mute/toggle`
+        ? `/track/0/mute`
+        : `/track/0/mute/toggle`
 
       const argumentValue = argv.state === undefined
         ? undefined
